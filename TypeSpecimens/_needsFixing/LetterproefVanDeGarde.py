@@ -37,7 +37,7 @@ from pagebot.contexts import defaultContext as context
 
 import pagebot # Import to know the path of non-Python resources.
 from pagebot.contributions.filibuster.blurb import Blurb
-from pagebot.fonttoolbox.objects.font import findInstalledFonts, getFontByName
+from pagebot.fonttoolbox.objects.family import getFamily
 
 from pagebot.toolbox.transformer import int2Color    
 from pagebot.style import CENTER, NO_COLOR, TOP, BOTTOM, MIDDLE, INLINE, ONLINE, OUTLINE, RIGHT, LEFT, MM, INCH
@@ -56,59 +56,28 @@ pb = 36*MM
 pl = pr = 16*MM # Although the various types of specimen page have their own margin, this it the overall page padding.
 pagePadding = (pt, pr, pb, pl)
 G = 12 # Gutter
-#SYSTEM_FAMILY_NAMES = ('Verdana',)
-#SYSTEM_FAMILY_NAMES = ('Georgia',)
-FONT_NAME_PATTERNS = ('Bungee', 'Amstel', 'Deco') # TODO, make this work if fonts don't exist.
-#SYSTEM_FAMILY_NAMES = ('Proforma', 'Productus')
-#MY_FAMILY_NAMES = ('Proforma', 'Productus')
-#FONT_NAME_PATTERNS = ('Proforma')
-#FONT_NAME_PATTERNS = ('Productus')
-#FONT_NAME_PATTERNS = ('Bitcount',)
-FONT_NAME_PATTERNS = ('Upgrade',)
+#FONT_NAME = ('Verdana',)
+#FONT_NAME = ('Georgia',)
+#FONT_NAMES = ('Bungee', 'Amstel', 'Deco') # TODO, make this work if fonts don't exist.
+#FONT_NAMES = ('Proforma', 'Productus')
+#FONT_NAME = ('Proforma', 'Productus')
+#FONT_NAME = ('Proforma')
+#FONT_NAME = ('Productus')
+#FONT_NAME = ('Bitcount',)
+FONT_NAME = ('Upgrade',)
+family = getFamily(FONT_NAME)
+print family
 
 # Export in _export folder that does not commit in Git. Force to export PDF.
 EXPORT_PATH_PNG = '_export/LetterproefVanDeGarde.png' 
 EXPORT_PATH_PDF = '_export/LetterproefVanDeGarde.pdf' 
 COVER_IMAGE_PATH = 'images/VanDeGardeOriginalCover.png'
-
-def findFont(styleNames, italic=False):
-    u"""Find available fonts and guess closest styles for regular, medium and bold."""
-    # Any TypeNetwork TYPETR Productus or Proforma installed in the system?
-    # Some hard wired foundry name here. This could be improved. Maybe we can add a public
-    # "Meta-info about typefaces somewhere in PageBot, so foundries and designers can add their own
-    # data there.
-    FAMILY_NAMES = FONT_NAME_PATTERNS
-    fontNames = findInstalledFonts(FONT_NAME_PATTERNS)
-    foundryName = 'TN | TYPETR' # TODO: Get from font if available
-    if not fontNames: # Not installed, find something else that is expected to exist in OSX:
-        foundryName = 'Apple OSX Font'
-        FAMILY_NAMES = SYSTEM_FAMILY_NAMES
-        for pattern in FAMILY_NAMES:
-            fontNames = findInstalledFonts(pattern)
-            if fontNames:
-                break
-
-    # Find matching styles. 
-    for styleName in styleNames:
-        for fontName in fontNames:
-            if styleName is None:
-                if fontName in FAMILY_NAMES: # Some fonts are named by plain family name for the Regular.
-                    return foundryName, fontName
-                continue
-            if styleName in fontName:
-                return foundryName, fontName
-    return None, None # Nothing found.
-
-def italicName(fontName):
-    if not '-' in fontName:
-        return fontName + '-Italic'
-    return fontName + 'Italic'
     
 def makeDocument():
     u"""Create Document instance with a single page. Fill the page with elements
     and perform a conditional layout run, until all conditions are solved."""
     
-    foundryName, bookName = findFont((None, 'Book', 'Regular')) # Find these styles in order.
+    bookFont = family.findFont('Book') # Find these styles in order.
     _, mediumName = findFont(('Medium', 'Book', 'Regular'))
     mediumName = mediumName or bookName # In case medium weight does not exist.
     _, boldName = findFont(('Bold', 'Medium'))

@@ -222,7 +222,7 @@ def makeDocument(families):
     doc = Document(w=W, h=H, title='Variable Font Sample Page', originTop=False, startPage=0, 
         autoPages=numPages, context=context, gridX=GRID_X, gridY=GRID_Y)
 
-    pn = 0
+    pn = 1
     page = doc[pn]
     page.ch = 0 # No vertical grid
     page.padding = PADDING

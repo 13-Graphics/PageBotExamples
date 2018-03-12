@@ -15,12 +15,12 @@
 #
 #     Needs filling in with content.
 #
+from pagebot.contexts import defaultContext as context
 from random import random # Used for random color palet.
 
 # Create random title and names
 from pagebot.contributions.filibuster.blurb import blurb
 
-from pagebot.contexts import defaultContext as context
 from pagebot.toolbox.transformer import darker
 # Get function to find the Roboto family (in this case installed in the PageBot repository
 from pagebot.fonttoolbox.objects.family import getFamily
@@ -61,7 +61,7 @@ def makeDocument():
     doc = Document(w=W, h=H, title='A Demo Book Cover', autoPages=1, context=context,
         originTop=False) # One page, just the cover.
 
-    page = doc[0] # Get the first/single page of the document.
+    page = doc[1] # Get the first/single page of the document.
     page.name = 'Cover'
     
     # Get the current view of the document. This allows setting of
