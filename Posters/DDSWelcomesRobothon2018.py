@@ -45,7 +45,7 @@ doc = Document(w=W, h=H, padding=M, autoPages=1, context=context, originTop=Fals
 
 doc.view.showTextOverflowMarker = False
 
-page = doc[0]
+page = doc[1]
 page.padding = PADDING
 
 newRect(x=0, y=0, z=-100, w=W, h=H, fill=(1, 0, 0), parent=page)
