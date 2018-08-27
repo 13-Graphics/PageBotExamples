@@ -1,7 +1,7 @@
-~~~Python
-cid = 'Simple Site'
+~~~
+cid = 'DesignDesign.Space'
 
-doc.lib['footer'] = "Footer of the page. Footer of the page. Footer of the page. Footer of the page. Footer of the page. Footer of the page."
+doc.lib['footer'] = """Let us know what you think. Do you have any questions for us? <a href="mailto:info@designdesign.space?subject=Tell me more about DesignDesign.Space">info@designdesign.space</a>."""
 
 doc.title = doc.name = 'Design&nbsp;Design&nbsp;Space'
 page = doc[1]
@@ -9,27 +9,34 @@ box = page.select('Logo')
 ~~~
 # DesignDesign.Space
 
-~~~Python
-box = page.select('Introduction')
 ~~~
-## *What are the dreams and dragons* in your design process? How do you change a plan into a planning and mistakes into treasures? Where can you find the design space to develop?
+box = page.select('HeroIntroduction')
+~~~
+## What are the *dreams* and *dragons* in your design process? How do you change a plan into a planning and mistakes into treasures? How will your profession change in the next 5 years?
 
-~~~Python
+<!-- Where can you find the design space to develop? -->
+
+~~~
 box = page.select('HeroSlides').newSlide()
 ~~~
-![pagebot_smartphones.jpg](images/pagebot_smartphones.jpg)
+![DesignModels2-91-1.png](images/DesignModels2-91-1.png)
 
-~~~Python
+~~~
 box = page.select('HeroSlides').newSlide()
 ~~~
-![pagebot_macbookpro.jpg](images/pagebot_macbookpro.jpg)
+![DesignModels2.009.png](images/DesignModels2.009.png)
 
-~~~Python
+~~~
 box = page.select('HeroSlides').newSlide()
 ~~~
-![pagebot_smartphone_with_hand.jpg](images/pagebot_smartphone_with_hand.jpg)
+![DesignModels2.092.png](images/DesignModels2.092.png)
 
-~~~Python
+~~~
+box = page.select('HeroSlides').newSlide()
+~~~
+![DesignModels2.038.png](images/DesignModels2.038.png)
+
+~~~
 box = page.select('Content')
 ~~~
 

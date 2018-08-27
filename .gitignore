@@ -102,5 +102,6 @@ ENV/
 
 .DS_Store
 _export
+_instances
+_private
 _local
-

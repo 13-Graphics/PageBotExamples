@@ -1,8 +1,10 @@
 
+
+var slideTimer = 5; /* Number of seconds per slide
+
 // Fireup the plugins
 $(document).ready(function(){
 	
-
 });
 /**
  * Handles toggling the navigation menu for small screens.
@@ -49,5 +51,5 @@ function showSlides() {
     slideIndex++;
     if (slideIndex > slides.length) {slideIndex = 1} 
     slides[slideIndex-1].style.display = "block"; 
-    setTimeout(showSlides, 2000); // Change image every 2 seconds
+    setTimeout(showSlides, slideTimer*1000); // Change image every slideTimer seconds
 }

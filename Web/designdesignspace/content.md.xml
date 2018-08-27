@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<document><pre><code class="Python">cid = 'Simple Site'
+<document><pre><code>cid = 'DesignDesign.Space'
 
-doc.lib['footer'] = &quot;Footer of the page. Footer of the page. Footer of the page. Footer of the page. Footer of the page. Footer of the page.&quot;
+doc.lib['footer'] = &quot;&quot;&quot;Let us know what you think. Do you have any questions for us? &lt;a href=&quot;mailto:info@designdesign.space?subject=Tell me more about DesignDesign.Space&quot;&gt;info@designdesign.space&lt;/a&gt;.&quot;&quot;&quot;
 
 doc.title = doc.name = 'Design&amp;nbsp;Design&amp;nbsp;Space'
 page = doc[1]
@@ -9,23 +9,29 @@ box = page.select('Logo')
 </code></pre>
 
 <h1>DesignDesign.Space</h1>
-<pre><code class="Python">box = page.select('Introduction')
+<pre><code>box = page.select('HeroIntroduction')
 </code></pre>
 
-<h2><em>What are the dreams and dragons</em> in your design process? How do you change a plan into a planning and mistakes into treasures? Where can you find the design space to develop?</h2>
-<pre><code class="Python">box = page.select('HeroSlides').newSlide()
+<h2>What are the <em>dreams</em> and <em>dragons</em> in your design process? How do you change a plan into a planning and mistakes into treasures? How will your profession change in the next 5 years?</h2>
+<!-- Where can you find the design space to develop? -->
+
+<pre><code>box = page.select('HeroSlides').newSlide()
 </code></pre>
 
-<p><img alt="pagebot_smartphones.jpg" src="images/pagebot_smartphones.jpg" /></p>
-<pre><code class="Python">box = page.select('HeroSlides').newSlide()
+<p><img alt="DesignModels2-91-1.png" src="images/DesignModels2-91-1.png" /></p>
+<pre><code>box = page.select('HeroSlides').newSlide()
 </code></pre>
 
-<p><img alt="pagebot_macbookpro.jpg" src="images/pagebot_macbookpro.jpg" /></p>
-<pre><code class="Python">box = page.select('HeroSlides').newSlide()
+<p><img alt="DesignModels2.009.png" src="images/DesignModels2.009.png" /></p>
+<pre><code>box = page.select('HeroSlides').newSlide()
 </code></pre>
 
-<p><img alt="pagebot_smartphone_with_hand.jpg" src="images/pagebot_smartphone_with_hand.jpg" /></p>
-<pre><code class="Python">box = page.select('Content')
+<p><img alt="DesignModels2.092.png" src="images/DesignModels2.092.png" /></p>
+<pre><code>box = page.select('HeroSlides').newSlide()
+</code></pre>
+
+<p><img alt="DesignModels2.038.png" src="images/DesignModels2.038.png" /></p>
+<pre><code>box = page.select('Content')
 </code></pre>
 
 <h1>Repeat to improve</h1>

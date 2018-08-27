@@ -20,6 +20,7 @@ import os
 from pagebot.publications.publication import Publication
 from pagebot.constants import URL_JQUERY, URL_MEDIA
 from pagebot.composer import Composer
+from pagebot.typesetter import Typesetter
 from pagebot.elements import *
 from pagebot.elements.web.simplesite.siteelements import *
 from pagebot.toolbox.color import color, whiteColor, blackColor
@@ -152,14 +153,14 @@ def makeSite(siteDescription, styles):
 
     # Make the all pages and elements of the site as empty containers
     makePages(doc, siteDescription)    
+    # By default, the typesetter produces a single Galley with content and code blocks.
+    t = Typesetter(doc.context)
+    galley = t.typesetFile(MD_PATH)
     # Create a Composer for this document, then create pages and fill content. 
     composer = Composer(doc)
-    # The composer creates a Typesetter instance that reads the markdown content and 
-    # executes the embedded Python code blocks. Typesetter result is saved as HTML strings
+    # The composer executes the embedded Python code blocks that direct where context should go.
     # by the HtmlContext.
-    # By default, the typesetter produces a single Galley with content and code blocks.
-    composer.typeset(MD_PATH)
-    composer.compose()
+    composer.compose(galley)
     return doc
     
 doc = makeSite(siteDescription, styles=styles)
