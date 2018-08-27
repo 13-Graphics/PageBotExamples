@@ -231,7 +231,7 @@ With his partner Claudia Mens, Van Blokland worked for over thirty-five years as
 
 Van Blokland has taught graphic design, typography, and type design for many years at the Royal Academy of Fine Arts (KABK) in The Hague and at the Academy of Fine Arts, Arnhem. His first typeface was Proforma, a large series commissioned by Purup, a Danish manufacturer of form-preparation systems. Proforma has now been released for general use through Type Network. In 1988, Van Blokland’s work brought him ATypI’s coveted Charles Peignot Prize.
 
-As cofounder and partner of Type Network, Van Blokland is a dedicated contributor and developer of new type and tools for type design. He currently teaches in the Master’s program in Graphic Design at AKV|St.Joost in Breda and at Type and Media, the Master type design program at KABK in The Hague. Read more about his thoughts on design and education in this interview and in his Lubalin lecture at Cooper Union in 2015: <a href="https://vimeo.com/133052206" target="External">Words</a>
+As cofounder and partner of Type Network, Van Blokland is a dedicated contributor and developer of new type and tools for type design. He currently teaches in the Master’s program in Graphic Design at AKV|St.Joost in Breda and at Type and Media, the Master type design program at KABK in The Hague. Learn more about his thoughts on design and education in his Lubalin lecture at Cooper Union in 2015: <a href="https://vimeo.com/133052206" target="External">Words</a> or the ATypI 2017 lecture about <a href="https://youtu.be/fPasHswCB8E">PageBot</a>
 
 
 ![images/claudiamens.jpg](images/claudiamens.jpg)
