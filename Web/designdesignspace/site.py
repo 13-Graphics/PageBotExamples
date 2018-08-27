@@ -53,12 +53,16 @@ siteDescription = [
     ('costs', 'Design Design Costs'),
     ('contact', 'Design Design Contact'),
 ]
-style = dict(
-    fill=whiteColor,
-    margin=em(0),
-    padding=em(3),
-    fontSize=pt(12),
-    leading=em(1.4),
+styles = dict(
+    body=dict(
+        fill=whiteColor,
+        margin=em(0),
+        padding=em(3),
+        fontSize=pt(12),
+        leading=em(1.4),
+    ),
+    br=dict(leading=em(1.4)
+    ),
 )
 
 def makeNavigation(header, currentPage):
@@ -105,7 +109,7 @@ def makePages(doc, siteDescription):
         page.description = 'Design Design Space offers online studies and workshops on master level. The site is created by PageBot.'
         page.keyWords = 'Design Design Space Scales design process typography typedesign coding Python graphic design'
         page.viewPort = 'width=device-width, initial-scale=1.0, user-scalable=yes'
-        page.style = style
+        page.style = styles['body']
         
         currentPage = name + '.html'
         # Add neste content elements for this page.
@@ -115,28 +119,28 @@ def makePages(doc, siteDescription):
         navigation = makeNavigation(header, currentPage)
        
         if pn == 1:
-            hero = Hero(parent=page, fontSize=em(1.1), fill=heroBackgroundColor)    
+            hero = Hero(parent=page, fill=heroBackgroundColor)    
             content = Content(parent=page)
             section = ColoredSection(parent=page, fill=coloredSectionBackgroundColor)
             content = Content(parent=page, contentId='Content2') #  fill=(0.7, 0.7, 0.9)
         elif pn == 2:
-            hero = Hero(parent=page, fontSize=em(1.1), fill=heroBackgroundColor)    
+            hero = Hero(parent=page, fill=heroBackgroundColor)    
             content = Content(parent=page)
             section = ColoredSection(parent=page, fill=coloredSectionBackgroundColor)
         elif pn == 3:
-            hero = Hero(parent=page, fontSize=em(1.1), fill=heroBackgroundColor)    
+            hero = Hero(parent=page, fill=heroBackgroundColor)    
             content = Content(parent=page)
             section = ColoredSection(parent=page, fill=coloredSectionBackgroundColor)
         elif pn == 4:
-            hero = Hero(parent=page, fontSize=em(1.1), fill=heroBackgroundColor)    
+            hero = Hero(parent=page, fill=heroBackgroundColor)    
             content = Content(parent=page)
             section = ColoredSection(parent=page)
         elif pn == 5: # Contact
             content = Content(parent=page)
         footer = Footer(parent=page, fill=footerBackgroundColor, textFill=footerColor)
 
-def makeSite(siteDescription, style):    
-    doc = Site(viewId='Site', autoPages=len(siteDescription), style=style)
+def makeSite(siteDescription, styles):    
+    doc = Site(viewId='Site', autoPages=len(siteDescription), styles=styles)
     view = doc.view
     view.resourcePaths = ('css','fonts','images','js') # Resourse folders to copy from base to export
     view.jsUrls = (URL_JQUERY, URL_MEDIA, 'js/main.js')
@@ -158,7 +162,7 @@ def makeSite(siteDescription, style):
     composer.compose()
     return doc
     
-doc = makeSite(siteDescription, style)
+doc = makeSite(siteDescription, styles=styles)
 
 if EXPORT_TYPE == DO_FILE:
     siteView = doc.view
