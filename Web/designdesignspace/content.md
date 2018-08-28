@@ -40,44 +40,55 @@ box = page.select('HeroSlides').newSlide()
 box = page.select('Content')
 ~~~
 
-# Repeat to improve
+# What do you want to study?
 
 What makes a design process *fundamentally* different from a production process, is that repetition improves the result. Starting with quick sketches, ignoring most details, next steps take more time. It’s not a linear process, it’s an iterative process, which means repeating the previous step in more detail.
 
-~~~Python
-box = page.select('Content2')
-~~~
-
-# Repeat to improve again
+# What would you like to achieve?
 
 Second context box. *DesignDesign.Space* is an online coaching environment to develop your design skills. Query your questions and improve your sketching. Acquire new techniques and research your way of presentating. In short, a space where you can design your design process. 
 
 ~~~Python
 box = page.select('ColoredSectionHeader')
 ~~~
-# Some things in rows of 3 columns
+# Some examples of studies and workshops
 
 ~~~Python
 box = page.select('ColoredSection0')
 ~~~
-## Something
-![pagebot_macbookpro.jpg](images/pagebot_macbookpro.jpg)
+## Sketching prototypes
+![TheEndOfCss015M1.083.jpeg](images/TheEndOfCss015M1.083.jpeg)
+
+*DesignDesign.Space* is an online coaching environment to develop your design skills. Query your questions and improve your sketching. Acquire new techniques and research your way of presentating. In short, a space where you can design your design process. 
+
+## Sketching prototypes
+![TheEndOfCss015M1.083.jpeg](images/TheEndOfCss015M1.083.jpeg)
 
 *DesignDesign.Space* is an online coaching environment to develop your design skills. Query your questions and improve your sketching. Acquire new techniques and research your way of presentating. In short, a space where you can design your design process. 
 
 ~~~Python
 box = page.select('ColoredSection1')
 ~~~
-## Something else
-![pagebot_smartphone_with_hand.jpg](images/pagebot_smartphone_with_hand.jpg)
+## Typedesign and coding
+![DesignModels2.106.png](images/DesignModels2.106.png)
+
+By definition designers are bad planners. It seems to be fundamental to design. Too optimistic in the beginning – “There is still plenty of time”, a design is never finished – “The next one will always be better”. 
+
+## Typedesign and coding
+![DesignModels2.106.png](images/DesignModels2.106.png)
 
 By definition designers are bad planners. It seems to be fundamental to design. Too optimistic in the beginning – “There is still plenty of time”, a design is never finished – “The next one will always be better”. 
 
 ~~~Python
 box = page.select('ColoredSection2')
 ~~~
-## Something more
-![pagebot_tablet.jpg](images/pagebot_tablet.jpg)
+## Educating design
+![DSGNWK_0582BWLow.jpg](images/DSGNWK_0582BWLow.jpg)
+
+The core idea behind designing the design process, is that it doesn’t make a difference for how long you do it. A project of 1 hour, basically goes through the same stages (research – design – presentation) as a project of 1 year. 
+
+## Programming publications
+![DSGNWK_0468BWLow.jpg](images/DSGNWK_0468BWLow.jpg)
 
 The core idea behind designing the design process, is that it doesn’t make a difference for how long you do it. A project of 1 hour, basically goes through the same stages (research – design – presentation) as a project of 1 year. 
 
@@ -90,6 +101,7 @@ box = page.select('Footer').append(doc.lib['footer'])
 page = page.next
 box = page.select('Logo')
 ~~~
+
 # Design Design Studies
 
 ~~~Python
