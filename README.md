@@ -1,16 +1,10 @@
-# PageBotExamples Version 0.5
+# PageBotExamples
 
-## What are PageBotExamples
+## What is this project about?
 
-PageBotExamples contain a wide range of example Python scripts and applications. See the respository TypeNetwork/PageBot for the library.
+The [PageBotExamples](https://github.com/TypeNetwork/PageBotExamples) project aims to be a central location for many good examples of PageBot documents, for a wide range of use-cases. The primary kind of contents are Python scripts, and any resources they include, which depend on the [TypeNetwork/PageBot](https://github.com/TypeNetwork/PageBot) Python library.
 
 ## Examples to be expected
-
-Durin the early staged of PageBot development, many structural changes have been made. The last one dates back November 2017, when we decided to make the connection to DrawBotApp optional. Other drawing environment should be made possible too, such as Flat.
-
-Especially that last change – adding a “Context” – made many of the examples break, and currently we are still working backwards to make them compatible and running again.
-
-To avoid confusion only the working examles will be published in this repository, for now leaving is more empty than intended.
 
 Examples of PageBot generated documents are in the range of:
 
@@ -23,11 +17,20 @@ Examples of PageBot generated documents are in the range of:
 * Thesis
 * Websites
 
+## History
+
+During the early stages of PageBot development, many structural changes were made. The last major one began in November 2017, when the connection to the [DrawBot app](http://drawbot.com) became optional and other drawing environments became also possible, such as [Flat](https://github.com/xxyxyz/flat/).
+
+This was done by adding a `Context` object, which made many of the examples break. Currently we are still working to make them compatible with the latest PageBot version and run again.
+
+To avoid confusion, only the working examples will be published in this repository, for now leaving it more empty than intended.
+
 ## Repository
 
-The **.gitignore** file for GitHub has been set not commit **_local** and **_export** folders. This way changes in scripts-not-yet-working and local generated documents will not upload to GitHub.
+In well written PageBot scripts, the `_export` folder is automatically generated.
 
-In well written PageBot scrtips the **_export** folder is automatically generated.
+The `.gitignore` file has been set up to prevent these `_export` folders from being committed to this repository.
 
+This way, locally generated documents will not be uploaded to GitHub automatically.
 
-
+The `_local` folders are also ignored, and can be used for changes to scripts that are not yet working, for example.
