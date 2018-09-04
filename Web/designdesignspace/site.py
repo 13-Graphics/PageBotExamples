@@ -33,10 +33,11 @@ EXPORT_PATH = '_export/' + SITE_NAME
 
 USE_SCSS = True
 
+DO_PDF = 'PDF'
 DO_FILE = 'File' # Generate website output in _export/DesignDesignSpace and open browser on file index.html
 DO_MAMP = 'Mamp' # Generate website in /Applications/Mamp/htdocs/DesignDesignSpace and open a localhost
 DO_GIT = 'Git' # Generate website and commit to git (so site is published in git docs folder.
-EXPORT_TYPE = DO_FILE
+EXPORT_TYPE = DO_PDF
 
 # Set SCSS variabes
 headerBackgroundColor = whiteColor
@@ -141,8 +142,8 @@ def makePages(doc, siteDescription):
             content = Content(parent=page)
         footer = Footer(parent=page, fill=footerBackgroundColor, textFill=footerColor)
 
-def makeSite(siteDescription, styles):    
-    doc = Site(viewId='Site', autoPages=len(siteDescription), styles=styles)
+def makeSite(siteDescription, styles, viewId):    
+    doc = Site(viewId=viewId, autoPages=len(siteDescription), styles=styles)
     view = doc.view
     view.resourcePaths = ('css','fonts','images','js') # Resourse folders to copy from base to export
     view.jsUrls = (URL_JQUERY, URL_MEDIA, 'js/main.js')
@@ -164,20 +165,21 @@ def makeSite(siteDescription, styles):
     composer.compose(galley)
     return doc
     
-doc = makeSite(siteDescription, styles=styles)
 
-doc.export('_export/%s.pdf' % SITE_NAME)
 
-if EXPORT_TYPE == DO_FILE:
-    siteView = doc.view
-    siteView.useScss = USE_SCSS
+if EXPORT_TYPE == DO_PDF:
+    doc = makeSite(siteDescription, styles, 'Page')    
+    doc.export('_export/%s.pdf' % SITE_NAME)
+
+elif EXPORT_TYPE == DO_FILE:
+    doc = makeSite(siteDescription, styles, 'Site')    
     doc.export(EXPORT_PATH)
     #print('Site file path: %s' % EXPORT_PATH)
     os.system(u'/usr/bin/open "%s"' % ('%s/index.html' % EXPORT_PATH))
 
 elif EXPORT_TYPE == DO_MAMP:
     # Internal CSS file may be switched off for development.
-    mampView = doc.newView('Mamp')
+    doc = makeSite(siteDescription, styles, 'Mamp')    
     mampView.useScss = USE_SCSS
     mampView.resourcePaths = view.resourcePaths
     mampView.jsUrls = view.jsUrls
@@ -198,7 +200,7 @@ elif EXPORT_TYPE == DO_MAMP:
 
 elif EXPORT_TYPE == DO_GIT and False:
     # Make sure outside always has the right generated CSS
-    view = doc.newView('Git')
+    doc = makeSite(siteDescription, styles, 'Git')    
     doc.build(path=EXPORT_PATH)
     # Open the css file in the default editor of your local system.
     os.system('git pull; git add *;git commit -m "Updating website changes.";git pull; git push')
