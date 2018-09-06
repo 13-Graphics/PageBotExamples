@@ -168,7 +168,7 @@ page.showBaselines = True
 
 # Put them on z-position != 0, to avoid the condition floating hooking on them.
 # E.g. Float2Top() layout conditions only look at elements with the same z-value.
-newImage('2018-09-04_De_Volkskrant_-_04-09-2018.pdf', w=W, h=H, z=-10, parent=page)
+newImage('_local/2018-09-04_De_Volkskrant_-_04-09-2018.pdf', w=W, h=H, z=-10, parent=page)
 newRect(fill=(1, 1, 1, 0.5), w=W, h=H, z=-10, parent=page)
 
 # =============================================================================
