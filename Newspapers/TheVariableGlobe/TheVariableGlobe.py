@@ -26,15 +26,25 @@ from pagebot.document import Document
 from pagebot.constants import Broadsheet, GRID_SQR, BASE_LINE, BASE_INDEX_RIGHT, CENTER, LEFT
 from pagebot.conditions import *
 # Import the measure units that we need
-from pagebot.toolbox.units import inch, pt, mm
+from pagebot.toolbox.units import inch, pt, mm, em
 # Import color stuff
 from pagebot.toolbox.color import blackColor
-from pagebot.elements import * # Import all types of page elemenents that we may need.
+# Import all types of page elemenents that we may need.
+from pagebot.elements import * 
+# Font findings functions
 from pagebot.fonttoolbox.objects.font import findFont, getInstance
+from pagebot.toolbox.dating import now
 
 context = getContext()
 # Random text generator
 blurb = Blurb()
+
+# =============================================================================
+#    Building switches
+# .............................................................................
+
+SHOW_TOPHEAD = True # Headline on top of title
+SHOW_TITLE = True # Main title of the newspaper
 
 # =============================================================================
 #    Measures
@@ -49,17 +59,18 @@ PR = 10.5*U
 PT = 7*U # Page padding top
 PB = 10*U # Page badding bottom
 PADDING = PT, PR, PB, PL
+BASELINE = mm(9.8) # Overall baseline grid
 
 # Grid definitions
 CC = 5 # Column count
-CW = (W-PL-PR+G)/CC-G # Column width (without gutter)
+CW1= CW = (W-PL-PR+G)/CC-G # Column width (without gutter)
 CW2 = 2*CW + G
 CW3 = 3*CW + 2*G
 CW4 = 4*CW + 3*G
 CW5 = 5*CW + 4*G
 
-RC = 8 # Row count
-RH = (H-PT-PB+G)/RC-G # Row height (without gutter)
+RC = 12 # Row count
+RH = (H-PT-PB+G)/RC-G # Row height (without gutter) depending on row count and page height
 
 gridX = [] # Create the column grid
 for colIndex in range(CC):
@@ -86,21 +97,26 @@ boldFont = bodyFont.getInstance(location)
 headFont = findFont('AmstelvarAlpha-VF')
 #print(headFont.axes) # Uncomment to see axes and values for this VF
 # Create bold/title font as Variable location
-location = dict(wght=700, XTRA=260)
 kerning = {('V','a'): -100}
-headBoldFont = titleFont = headFont.getInstance(location, kerning=kerning)
+location = dict(wght=700, XTRA=350)
+headBoldFont = headFont.getInstance(location, kerning=kerning)
+location = dict(wght=650, XTRA=260)
+headBoldCFont = titleFont = headFont.getInstance(location, kerning=kerning)
 # Install the fonts (there is a bug in either DrawBot or PageBot)
 # Showing 
 # *** DrawBot warning: font: 'AmstelvarAlpha-Default--XTRA260-wght700' 
 # is not installed, back to the fallback font: 'Verdana' ***
 # *** DrawBot warning: font: 'RobotoDelta-Regular' is not installed, 
 # back to the fallback font: 'Verdana' ***
-print(context.installFont(bodyFont))
-print(context.installFont(headFont))
-print(context.installFont(headBoldFont))
+bodyFontName = context.installFont(bodyFont)
+headFontName = context.installFont(headFont)
+headBoldCFontName = titleFontName = context.installFont(headBoldCFont)
+headBoldFontName = context.installFont(headBoldFont)
 
-print('Variable axes for headFont: ', headFont.axes)
-print('Variable axes for titleFont: ', titleFont.axes) # Single instance not longer has axes
+# Print the available axis names with the (min, default, max) values.
+print('Variable axes for bodyFont: ', bodyFont.axes)
+print('Variable axes for headFont: ', headFont.axes) 
+print('Generated instances not longer has axes, e.g. headBoldFont:', headBoldFont.axes)
 
 # =============================================================================
 #    Styles (comparable to InDesign paragraph and character styles)
@@ -110,20 +126,22 @@ print('Variable axes for titleFont: ', titleFont.axes) # Single instance not lon
 border = dict(strokeWidth=pt(1), stroke=blackColor)
 
 # Create the styles
-topHeadStyle = dict(font=bodyFont, fontSize=pt(48), xTextAlign=LEFT)
+topHeadStyle = dict(font=bodyFontName, fontSize=pt(48), xTextAlign=LEFT, hypenation=False)
 topHeadBoldStyle = copy(topHeadStyle)
-topHeadBoldStyle['font'] = titleFont
-titleStyle = dict(font=titleFont, fontSize=pt(100), xTextAlign=CENTER)
+topHeadBoldStyle['font'] = headBoldFontName
+titleStyle = dict(font=titleFontName, fontSize=pt(100), xTextAlign=CENTER)
 # Textline under the newspaper title
-subTitleStyle = dict(font=bodyFont, fontSize=pt(12), xTextAlign=LEFT)
+subTitleStyle = dict(font=bodyFontName, fontSize=pt(14), xTextAlign=LEFT)
 # Article headline
-headline1Style = dict(font=headFont, fontSize=pt(60), textFill=0, xTextAlign=CENTER)
-mainStyle = dict(font=bodyFont, fontSize=pt(16), textFill=0)
+headline1Style = dict(font=headBoldFontName, fontSize=pt(100), leading=em(1.1), textFill=0, xTextAlign=CENTER)
+# Article main text
+mainStyle = dict(font=bodyFontName, fontSize=pt(24), leading=BASELINE, textFill=0)
 
 # =============================================================================
 #    Create the document and define the viewing parameters
 # .............................................................................
-doc = Document(w=W, h=H, originTop=False, gridX=gridX, gridY=gridY, autoPages=1)
+doc = Document(w=W, h=H, originTop=False, gridX=gridX, gridY=gridY, 
+    baselineGrid=BASELINE, autoPages=1)
 # Set the viewing parameters
 view = doc.view
 view.padding = inch(1)
@@ -141,6 +159,7 @@ view.showPadding = True
 
 page = doc[1]
 page.padding = PADDING # Set 4 padding values all at once.
+page.showBaselines = True
 
 # =============================================================================
 #    Add background image from existing newspaper.
@@ -155,48 +174,61 @@ newRect(fill=(1, 1, 1, 0.5), w=W, h=H, z=-10, parent=page)
 # =============================================================================
 #    Top-left headline above newspaper title. Bold name with designer quote
 # .............................................................................
+if SHOW_TOPHEAD:
+    txt = blurb.getBlurb('name')
+    bs = context.newString(txt+': ', style=topHeadBoldStyle)
+    txt = blurb.getBlurb('design_article_title').capitalize()
+    if not txt.endswith('.'):
+        txt += '.'
+    bs += context.newString('“'+txt+'”', style=topHeadStyle)
+    txt = ' P:%d' % choice(range(80))
+    bs += context.newString(txt, style=topHeadBoldStyle)
+    paddingTop = inch(1)
+    tw, th = context.textSize(bs, w=CW3)
+    topHeadlineBox = newTextBox(bs, parent=page, h=RH, pt=paddingTop,
+        conditions=(Left2Left(), Fit2ColSpan(colSpan=3), Float2Top()))
+    topHeadlineBox.solve()
+    # Date box
+    #date = now()
+    #print(date.day)
+    #print(date.dateName)
+    #txt = '%s %s %s %s\n%s.com' % (date.dayName, date.day, date.monthName, date.year, TITLE.replace(' ',''))
+    #print(txt)
+       
+if SHOW_TITLE:
+    # Title of the newspaper. Calculate the size from the give usable page.pw width.
+    bs = context.newString(TITLE, style=titleStyle, w=page.pw)
+    tw, th = bs.size # Get the (width, height) if the created string.
+    #print('Calculated fitting title size: ', bs.fittingFontSize)
+    titleBox= newTextBox(bs, parent=page, h=th, borderBottom=border,
+        conditions=(Left2Left(), Fit2Width(), Float2Top()))
+    titleBox.solve()
+    # Title subline of the newspaper
+    txt = blurb.getBlurb('design_article_title').capitalize()
+    bs = context.newString(txt, style=subTitleStyle)
+    tw, th = bs.size
+    titleSublineBox = newTextBox(bs, parent=page, h=4*BASELINE, borderBottom=border, pt=th/2,
+        conditions=(Left2Left(), Fit2Width(), Float2Top()))
 
-tx = blurb.getBlurb('name')
-bs = context.newString(tx+': ', style=topHeadBoldStyle)
-tx = blurb.getBlurb('design_theory').capitalize()
-if not tx.endswith('.'):
-    tx += '.'
-bs += context.newString('“'+tx+'”', style=topHeadStyle)
-tw, th = context.textSize(bs, w=CW3)
-tx = ' P%d' % choice(range(80))
-bs += context.newString(tx+': ', style=topHeadBoldStyle)
-paddingTop = inch(1)
-newTextBox(bs, parent=page, h=th+paddingTop, pt=paddingTop,
-    conditions=(Left2Left(), Fit2ColSpan(colSpan=3), Float2Top()))
 
-
-# Title of the newspaper
-bs = context.newString(TITLE, style=titleStyle, w=page.pw)
-tw, th = bs.size
-print('Calculated fitting title size: ', bs.fittingFontSize)
-newTextBox(bs, parent=page, h=th, borderBottom=border, 
-    conditions=(Left2Left(), Fit2Width(), Float2Top()))
-# Title subline of the newspaper
-bs = context.newString('Aaaa ' * 30, style=subTitleStyle)
-tw, th = bs.size
-newTextBox(bs, parent=page, h=th*2, borderBottom=border, pt=th/2,
-    conditions=(Left2Left(), Fit2Width(), Float2Top()))
-'''
 if 1:
     # Main article as group of 3 text boxes
-    main1 = newRect(parent=page, w=CW4, mt=G, fill=0.8, conditions=(Left2Left(), Float2Top()))
+    main1 = newRect(parent=page, w=CW3, mt=G, fill=0.95, conditions=(Left2Left(), Float2Top()))
 
-    bs = context.newString('Headline main 1', style=headline1Style)
+    txt = blurb.getBlurb('design_theory').capitalize()
+    bs = context.newString(txt, style=headline1Style)
     tw, th = bs.size
-    newTextBox(bs, name='head1', parent=main1, conditions=(Left2Left(), Fit2Width(), Float2Top()))
+    head1 = newTextBox(bs, name='head1', parent=main1, conditions=(Left2Left(), Fit2Width(), Float2Top()))
 
-    bs = context.newString('Aaaa ' * 120, style=mainStyle)
-    newTextBox(bs, name='main11', h=400, w=CW2, parent=main1, fill=0.8, mt=3*G,
+    txt = blurb.getBlurb('article_content')
+    bs = context.newString(txt, style=mainStyle)
+    newTextBox(bs, name='main11', h=1200, w=CW1, parent=main1,
         conditions=(Left2Left(), Float2Top()))
-    bs = context.newString('Aaaa ' * 120, style=mainStyle)
-    newTextBox(bs, name='main12', h=400, w=CW2, parent=main1, fill=0.8, mt=3*G, 
+    txt = blurb.getBlurb('article_content')
+    bs = context.newString(txt, style=mainStyle)
+    newTextBox(bs, name='main12', h=1200, w=CW1, parent=main1, fill=0.95,
         conditions=(Right2Right(), Float2Top()))
-
+'''
 if 1:
     # Main article as group of 3 text boxes
     main2 = newRect(parent=page, w=CW4, mt=G, fill=0.8, conditions=(Left2Left(), Float2Top()))
@@ -214,9 +246,17 @@ if 1:
 
 '''
 doc.solve() # Drill down to solve all elements conditions.
+
+#print(topHeadlineBox.box)
+print(titleBox.xyz)
+# =============================================================================
+#    Export to PDF or other file formats
+# .............................................................................
+
 doc.export('_export/TheVariableGlobe.pdf')
 
-context.unInstallFont(bodyFont)
-context.unInstallFont(headFont)
-context.unInstallFont(boldFont)
+context.unInstallFont(bodyFontName)
+context.unInstallFont(headFontName)
+context.unInstallFont(headBoldCFontName)
+context.unInstallFont(headBoldFontName)
 
