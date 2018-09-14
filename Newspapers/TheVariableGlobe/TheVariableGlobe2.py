@@ -109,7 +109,6 @@ headBoldCFont = titleFont = headFont.getInstance(location, kerning=kerning)
 # *** DrawBot warning: font: 'RobotoDelta-Regular' is not installed, 
 # back to the fallback font: 'Verdana' ***
 bodyFontName = context.installFont(bodyFont)
-boldFontName = context.installFont(boldFont)
 headFontName = context.installFont(headFont)
 headBoldCFontName = titleFontName = context.installFont(headBoldCFont)
 headBoldFontName = context.installFont(headBoldFont)
@@ -137,8 +136,6 @@ subTitleStyle = dict(font=bodyFontName, fontSize=pt(14), xTextAlign=LEFT)
 headline1Style = dict(font=headBoldFontName, fontSize=pt(100), leading=em(1.1), textFill=0, xTextAlign=CENTER)
 # Article main text
 mainStyle = dict(font=bodyFontName, fontSize=pt(24), leading=BASELINE, textFill=0)
-# Date at top-right. Actual fize is calculated to fit
-dateStyle = dict(font=boldFontName, fontSize=pt(24), leading=BASELINE, textFill=0)
 
 # =============================================================================
 #    Create the document and define the viewing parameters
@@ -190,24 +187,17 @@ if SHOW_TOPHEAD:
     bs += context.newString('“'+txt+'”', style=topHeadStyle)
     txt = ' P:%d' % choice(range(80))
     bs += context.newString(txt, style=topHeadBoldStyle)
+    paddingTop = inch(1)
     tw, th = context.textSize(bs, w=CW3)
-    topHeadlineBox = newTextBox(bs, parent=page, h=RH,
+    topHeadlineBox = newTextBox(bs, parent=page, h=RH, pt=paddingTop,
         conditions=(Left2Left(), Fit2ColSpan(colSpan=3), Float2Top()))
     topHeadlineBox.solve()
     # Date box
-    date = now()
+    #date = now()
     #print(date.day)
     #print(date.dateName)
-    txtDate = '%s %s %s %s\n' % (date.fullDayName.upper(), date.day, 
-        date.fullMonthName.upper(), date.year)
-    txtUrl = '\n%s.com' % (TITLE.replace(' ',''))
-    bs = context.newString(txt, style=dateStyle, w=CW)
-    dateStyle['fontSize'] = bs.fittingFontSize
-    dateStyle['font'] = boldFontName
-    bs += context.newString(txtUrl, style=dateStyle, w=CW)
-    dateBox= newTextBox(bs, parent=page, w=CW, h=RH, #vTextAlign=BOTTOM,
-        conditions=(Right2Right(), Float2Top()))
-    dateBox.solve()
+    #txt = '%s %s %s %s\n%s.com' % (date.dayName, date.day, date.monthName, date.year, TITLE.replace(' ',''))
+    #print(txt)
        
 if SHOW_TITLE:
     # Title of the newspaper. Calculate the size from the give usable page.pw width.
@@ -221,8 +211,8 @@ if SHOW_TITLE:
     txt = blurb.getBlurb('design_article_title').capitalize()
     bs = context.newString(txt, style=subTitleStyle)
     tw, th = bs.size
-    titleSublineBox = newTextBox(bs, parent=page, h=4*BASELINE, borderBottom=border, 
-        pt=th/2, conditions=(Left2Left(), Fit2Width(), Float2Top()))
+    titleSublineBox = newTextBox(bs, parent=page, h=4*BASELINE, borderBottom=border, pt=th/2,
+        conditions=(Left2Left(), Fit2Width(), Float2Top()))
 
 
 if 1:
