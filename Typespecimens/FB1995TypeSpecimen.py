@@ -22,12 +22,17 @@
 import os # Import standard libary for accessing the file system.
 from random import choice, shuffle # Used for random selection of sample words
 
-from pagebot.contexts import defaultContext as context # Decide if running in DrawBot or Linux-Flat
-from pagebot.style import INCH, LEFT, RIGHT, CENTER # Import some measure and alignments constants.
+from pagebot.contexts.platform import getContext # Decide if running in DrawBot or Linux-Flat
+context = getContext()
+
+from pagebot.toolbox.units import inch, pt
+from pagebot.toolbox.color import color
+
+from pagebot.style import LEFT, RIGHT, CENTER # Import some measure and alignments constants.
 from pagebot.document import Document # Overall container class of any PageBot script
 from pagebot.fonttoolbox.objects.family import getFamily, getFamilies # Access to installed fonts
 from pagebot.elements import newRect, newTextBox, newImage, newLine # Used elements in this specimen
-from pagebot.toolbox.transformer import int2Color, path2FontName # Convenient CSS color to PageBot color conversion
+from pagebot.toolbox.transformer import path2FontName # Convenient CSS color to PageBot color conversion
 from pagebot.toolbox.hyphenation import wordsByLength # Use English hyphenation dictionary as word selector
 from pagebot.conditions import * # Import layout conditions for automatic layout.
 from pagebot.contributions.filibuster.blurb import Blurb
@@ -48,11 +53,11 @@ else: # Otherwise ignore the background colors of the column elements.
 blurb = Blurb()
     
 # Basic page metrics.
-U = 8 # Page layout units, to unite baseline grid and gutter.
-W = 6.34*INCH * 2 # Draw as spread, as page view does not support them (yet)
-H = 10*INCH # Copy size from the original specimen.
+U = pt(8) # Page layout units, to unite baseline grid and gutter.
+W = inch(6.34 * 2) # Draw as spread, as page view does not support them (yet)
+H = inch(10) # Copy size from the original specimen.
 # Hard coded padding sizes derived from the scan.
-PT, PR, PB, PL = PADDING = 23, 34, 28, 28 # Page padding top, right, bottom, left
+PT, PR, PB, PL = PADDING = pt(23, 34, 28, 28) # Page padding top, right, bottom, left
 L = 2*U # Baseline leading
 G = 2*U # Default gutter = space between the columns
 GM = 7*U # Gutter in middle of the spread.
@@ -78,7 +83,7 @@ FAMILIES = (
     #getFamily('Roboto'), 
     #getFamily('AmstelvarAlpha')
 )
-print 'Proforma',FAMILIES[1].getStyles().keys()
+print('Proforma', FAMILIES[1].getStyles().keys())
 
 #labelFamily = getFamily('Roboto')
 labelFamily = getFamily('Upgrade')
@@ -91,7 +96,7 @@ charSetStyle = dict(font=labelFont.path, fontSize=10, xTextAlign=CENTER, rLeadin
 descriptionStyle = dict(font=labelFont.path, fontSize=12, xTextAlign=CENTER, rLeading=1.25)
 
 # Sample glyphs set in bottom right frame. Automatic add a spacing between all characters.
-GLYPH_SET = u"""ABCDEFGHIJKLMNOPQRSTUVWXYZ&$1234567890abcdefghijklmnopqrstuvwxyz.,-‘:;!?\nAÀÁÂÃÄÅĀĂĄǺBCÇĆĈĊČDĎEÈÉÊËĒĔĖĘĚFGĜĞĠĢǦHĤIÌÍÎÏĨĪĬĮİJĴKĶLĹĻĽMNÑŃŅŇOÒÓÔÕÖŌŎŐPQRŔŖŘSŚŜŞŠȘTŢŤȚUÙÚÛÜŨŪŬŮŰŲVWŴẀẂẄXYÝŶŸỲZŹŻŽÆǼÐØǾÞĐĦĿŁŊŒŦΔaàáâãäåāăąǻbcçćĉċčdďeèéêëēĕėęěfgĝğġģǧhĥiìíîïĩīĭįjĵkķlĺļľmnñńņňoòóôõöōŏőpqrŕŗřsśŝşšștţťțuùúûüũūŭůűųvwŵẁẃẅxyýÿŷỳzźżžªºßæǽðøǿþđħıŀłŋœŧƒȷəﬁﬂ0123456789¼½¾₀₁₂₃₄₅₆₇₈₉²³¹⁰⁴⁵⁶⁷⁸⁹_-–—―‒([{‚„)]}!"#%&'*,.//:;?@\¡·¿†‡•…‰′″£¤¥€¦§©®°¶℗℗™◊✓"""
+GLYPH_SET = """ABCDEFGHIJKLMNOPQRSTUVWXYZ&$1234567890abcdefghijklmnopqrstuvwxyz.,-‘:;!?\nAÀÁÂÃÄÅĀĂĄǺBCÇĆĈĊČDĎEÈÉÊËĒĔĖĘĚFGĜĞĠĢǦHĤIÌÍÎÏĨĪĬĮİJĴKĶLĹĻĽMNÑŃŅŇOÒÓÔÕÖŌŎŐPQRŔŖŘSŚŜŞŠȘTŢŤȚUÙÚÛÜŨŪŬŮŰŲVWŴẀẂẄXYÝŶŸỲZŹŻŽÆǼÐØǾÞĐĦĿŁŊŒŦΔaàáâãäåāăąǻbcçćĉċčdďeèéêëēĕėęěfgĝğġģǧhĥiìíîïĩīĭįjĵkķlĺļľmnñńņňoòóôõöōŏőpqrŕŗřsśŝşšștţťțuùúûüũūŭůűųvwŵẁẃẅxyýÿŷỳzźżžªºßæǽðøǿþđħıŀłŋœŧƒȷəﬁﬂ0123456789¼½¾₀₁₂₃₄₅₆₇₈₉²³¹⁰⁴⁵⁶⁷⁸⁹_-–—―‒([{‚„)]}!"#%&'*,.//:;?@\¡·¿†‡•…‰′″£¤¥€¦§©®°¶℗℗™◊✓"""
 
 # Export in _export folder that does not commit in Git. Force to export PDF.
 DO_OPEN = False
@@ -103,7 +108,7 @@ else:
     EXPORT_PATH_PBG = '_export/FB1995TypeSpecimen.png' 
 
 # Some parameters from the original book
-PAPER_COLOR = int2Color(0xFEFEF7) # Approximation of paper color of original specimen.
+PAPER_COLOR = color(rgb=0xFEFEF7) # Approximation of paper color of original specimen.
 
 # Get the dictionary of English ("en" is default language), other choice is Dutch ("nl").
 # Danish could be made available for PageBot if requested.
@@ -235,7 +240,7 @@ def buildSpecimenPages(doc, family, pn):
         if random() <= 0.2:
             headline = headline.upper()
         stackLine = context.newString(headline,
-            style=dict(font=choice(family.getFonts()).path, leading=-0.2,
+            style=dict(font=choice(context.installedFonts), leading=-0.2,
                        paragraphTopSpacing=0, paragraphBottomSpacing=0
             ), w=C3, pixelFit=False)
         _, by, bw, bh = stackLine.bounds()
@@ -257,7 +262,7 @@ def makeDocument(families):
 
     pn = 1
     page = doc[pn]
-    page.ch = 0 # No vertical grid
+    page.ch = pt(0) # No vertical grid
     page.padding = PADDING
     page.gridX = GRID_X
     newImage(FB_PATH_L, x=0, y=0, w=W/2, parent=page)
@@ -265,7 +270,7 @@ def makeDocument(families):
     
     # Get default view from the document and set the viewing parameters.
     view = doc.view
-    view.padding = INCH/2 # For showing cropmarks and such, make >=20*MM or INCH.
+    view.padding = inch(0.5) # For showing cropmarks and such, make >=20*MM or INCH.
     view.showPageCropMarks = True # Won't show if there is not padding in the view.
     view.showPageFrame = SHOW_FRAMES # No frame in case PAPER_COLOR exists to be shown.
     view.showPagePadding = SHOW_FRAMES # No frame in case PAPER_COLOR exists to be shown.
@@ -289,4 +294,4 @@ doc.export(EXPORT_PATH_PNG)
 if DO_OPEN:
     os.system(u'open "%s"' % EXPORT_PATH)
   
-print 'Done'
+print('Done')
