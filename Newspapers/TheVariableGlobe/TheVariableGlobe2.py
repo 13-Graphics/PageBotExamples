@@ -113,10 +113,11 @@ headFontName = context.installFont(headFont)
 headBoldCFontName = titleFontName = context.installFont(headBoldCFont)
 headBoldFontName = context.installFont(headBoldFont)
 
-# Print the available axis names with the (min, default, max) values.
-print('Variable axes for bodyFont: ', bodyFont.axes)
-print('Variable axes for headFont: ', headFont.axes) 
-print('Generated instances not longer has axes, e.g. headBoldFont:', headBoldFont.axes)
+if 0:
+    # Print the available axis names with the (min, default, max) values.
+    print('Variable axes for bodyFont: ', bodyFont.axes)
+    print('Variable axes for headFont: ', headFont.axes) 
+    print('Generated instances not longer has axes, e.g. headBoldFont:', headBoldFont.axes)
 
 # =============================================================================
 #    Styles (comparable to InDesign paragraph and character styles)
@@ -136,6 +137,7 @@ subTitleStyle = dict(font=bodyFontName, fontSize=pt(14), xTextAlign=LEFT)
 headline1Style = dict(font=headBoldFontName, fontSize=pt(100), leading=em(1.1), textFill=0, xTextAlign=CENTER)
 # Article main text
 mainStyle = dict(font=bodyFontName, fontSize=pt(24), leading=BASELINE, textFill=0)
+dateStyle = dict(font=bodyFontName, fontSize=pt(24), leading=BASELINE, textFill=0)
 
 # =============================================================================
 #    Create the document and define the viewing parameters
@@ -171,8 +173,11 @@ page.showBaselines = True
 # E.g. Float2Top() layout conditions only look at elements with the same z-value.
 opaque = 0.7
 pageIndex = 1 # Select the page index from the PDF to use as background image. 
-newImage('_local/2018-09-04_De_Volkskrant_-_04-09-2018.pdf', w=W, h=H, z=-10, 
-    index=pageIndex, parent=page)
+# For copyright reasons the template PDF cannot be added to the Open Source repository 
+#templatePath = '_local/2018-09-04_De_Volkskrant_-_04-09-2018.pdf'
+templatePath = '_local/2018-09-14_De_Volkskrant_-_14-09-2018.pdf'
+
+newImage(templatePath, w=W, h=H, z=-10, index=pageIndex, parent=page)
 newRect(fill=(1, 1, 1, opaque), w=W, h=H, z=-10, parent=page)
 
 # =============================================================================
@@ -193,12 +198,14 @@ if SHOW_TOPHEAD:
         conditions=(Left2Left(), Fit2ColSpan(colSpan=3), Float2Top()))
     topHeadlineBox.solve()
     # Date box
-    #date = now()
-    #print(date.day)
-    #print(date.dateName)
-    #txt = '%s %s %s %s\n%s.com' % (date.dayName, date.day, date.monthName, date.year, TITLE.replace(' ',''))
-    #print(txt)
-       
+    date = now()
+    dateString = '%s %s %s %s' % (date.fullDayName.upper(), date.day, date.fullMonthName.upper(), date.year)
+    bs = context.newString(dateString, style=dateStyle, w=CW)
+    dateStyle = dict(font=bodyFontName, fontSize=pt(24), leading=BASELINE, textFill=0)
+
+    bs += context.newString('\n%s.com' % TITLE.replace(' ',''), fontSize=bs.fittingFontSize)
+    newTextBox(bs, parent=page, w=CW, conditions=(Right2Right(), Top2Top()))
+    
 if SHOW_TITLE:
     # Title of the newspaper. Calculate the size from the give usable page.pw width.
     bs = context.newString(TITLE, style=titleStyle, w=page.pw)
