@@ -23,8 +23,8 @@ from pagebot.contributions.filibuster.blurb import Blurb
 # inheriting from Document, but for educational purpose, we'll use the generic class.
 from pagebot.document import Document 
 # Get constants needed for this Newspaper page.
-from pagebot.constants import (Broadsheet, GRID_SQR, BASE_LINE, BASE_INDEX_RIGHT, CENTER, LEFT,
-    GRID_COL, GRID_COL_BG, GRID_ROW_BG)
+from pagebot.constants import (Broadsheet, GRID_SQR, BASE_LINE, BASE_INDEX_RIGHT, 
+    CENTER, LEFT, GRID_COL, GRID_COL_BG, GRID_ROW_BG)
 from pagebot.conditions import *
 # Import the measure units that we need
 from pagebot.toolbox.units import inch, pt, mm, em
