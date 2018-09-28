@@ -24,15 +24,16 @@
 import os # Import standard libary for accessing the file system.
 from random import choice, shuffle # Used for random selection of sample words
 
-from pagebot.contexts.platform import getContext # Decide if running in DrawBot or Linux-Flat
-from pagebot.style import CENTER, INLINE # Import some measure and alignments constants.
+from pagebot.contexts import getContext # Decide if running in DrawBot or Linux-Flat
+from pagebot.constants import CENTER, INLINE # Import some measure and alignments constants.
 from pagebot.document import Document # Overall container class of any PageBot script
 from pagebot.fonttoolbox.objects.font import findFont # Access to installed fonts
 from pagebot.elements import newRect, newTextBox, newImage # Used elements in this specimen
-from pagebot.toolbox.transformer import path2FontName # Convenient CSS color to PageBot color conversion
-from pagebot.toolbox.hyphenation import wordsByLength # Use English hyphenation dictionary as word selector
 from pagebot.conditions import * # Import layout conditions for automatic layout.
 from pagebot.contributions.filibuster.blurb import Blurb
+
+from pagebot.toolbox.transformer import path2FontName # Convenient CSS color to PageBot color conversion
+from pagebot.toolbox.hyphenation import wordsByLength # Use English hyphenation dictionary as word selector
 from pagebot.toolbox.units import inch, pt, em
 from pagebot.toolbox.color import color
 
@@ -55,7 +56,7 @@ L = 2*U # Baseline leading
 G = 3*U # Default gutter = space between the columns
 
 # Hard coded column sizes derived from the scan.
-C1, C2, C3 = (150, 112, 112)
+C1, C2, C3 = (112, 300, 112)
 # Construct the grid pattern. 
 # Last value None means that there is no gutter running inside the right padding.
 GRID_X = ((C1, G), (C2, G), (C3, G))
