@@ -35,7 +35,7 @@ from pagebot.contributions.filibuster.blurb import Blurb
 from pagebot.toolbox.transformer import path2FontName # Convenient CSS color to PageBot color conversion
 from pagebot.toolbox.hyphenation import wordsByLength # Use English hyphenation dictionary as word selector
 from pagebot.toolbox.units import inch, pt, em
-from pagebot.toolbox.color import color
+from pagebot.toolbox.color import color, blackColor
 
 context = getContext()
 
@@ -43,7 +43,7 @@ SHOW_GRID = True
 SHOW_TEMPLATE = True
 SHOW_FRAMES = True
 
-sampleFont = findFont('Upgrade-Regular')
+sampleFont = findFont('Upgrade-Bold')
  
 blurb = Blurb()
     
@@ -51,9 +51,9 @@ blurb = Blurb()
 U = pt(8) # Page layout units, to unite baseline grid and gutter.
 W, H = pt(590, 842) # Copy size from original Berthold specimen scan.
 # Hard coded padding sizes derived from the scan.
-PT, PR, PB, PL = PADDING = pt(36, 34, 75, 70) # Page padding top, right, bottom, left
+PT, PR, PB, PL = PADDING = pt(90, 40, 40, 40) # Page padding top, right, bottom, left
 L = 2*U # Baseline leading
-G = 3*U # Default gutter = space between the columns
+G = 3*U # Default gutter = 2pace between the columns
 
 # Hard coded column sizes derived from the scan.
 C1, C2, C3 = (112, 300, 112)
@@ -120,7 +120,27 @@ def buildSpecimenPages(doc, family, pn):
             break
     return pn
    
-       
+def makePage1(page, font):
+    border = dict(stroke=blackColor, strokeWidth=pt(0.5))
+    r = newRect(parent=page, conditions=[Fit()], padding=0)
+    r.showPadding = True
+    
+    fullName = '%s %s' % (font.info.familyName, font.info.styleName)
+    style = dict(font=font, fontSize=pt(24), xTextAlign=CENTER)
+    bs = context.newString(fullName.upper(), style=style)
+    newTextBox(bs, parent=r, borderTop=border, borderBottom=border, margin=0, padding=0,
+        conditions=[Left2Left(), Top2Top(), Fit2Width()])
+    
+def makePage2(page, font):
+    border = dict(stroke=blackColor, strokeWidth=pt(0.5))
+    r = newRect(parent=page, conditions=[Fit()])
+
+    fullName = '%s %s' % (font.info.familyName, font.info.styleName)
+    style = dict(font=font, fontSize=pt(24), xTextAlign=CENTER)
+    bs = context.newString(fullName.upper(), style=style)
+    newTextBox(bs, parent=r, borderTop=border, borderBottom=border, margin=0, padding=0,
+        conditions=[Left2Left(), Top2Top(), Fit2Width()])
+         
 def makeDocument(font):
     u"""Create the main document in the defined size with a couple of automatic empty pages."""
 
@@ -156,6 +176,7 @@ def makeDocument(font):
     # Set z-azis != 0, to make floating elements not get stuck at the background
     if SHOW_TEMPLATE:
         newImage(BERTHOLD_PATH, x=0, y=0, z=-10, w=W, index=1, parent=page)
+    makePage1(page, sampleFont)
 
     page = doc[4]
     page.ch = 0 # No vertical grid
@@ -165,15 +186,15 @@ def makeDocument(font):
     # During development, draw the template scan as background
     # Set z-azis != 0, to make floating elements not get stuck at the background
     if SHOW_TEMPLATE:
-        newImage(BERTHOLD_PATH, x=0, y=0, z=-10, w=W, index=1, parent=page)
-
+        newImage(BERTHOLD_PATH, x=0, y=0, z=-10, w=W, index=2, parent=page)
+    makePage2(page, sampleFont)
+    
     doc.solve()
     
     return doc
 
 doc = makeDocument(sampleFont)
 doc.export(EXPORT_PATH_PDF) 
-#doc.export(EXPORT_PATH_PNG) 
 if DO_OPEN:
     os.system(u'open "%s"' % EXPORT_PATH)
   
