@@ -12,7 +12,7 @@
 #     Supporting Flat, xxyxyz.org/flat
 # -----------------------------------------------------------------------------
 #
-#     A_Gerrit_Noordzij.py
+#     Cover-Front.py
 #
 #     Proof of concept to re-generate the existing InDesign layouts as PDF.
 #
@@ -49,8 +49,6 @@ from pagebot.toolbox.units import units, p, pt, em, inch
 from pagebot.constants import (GRID_COL, GRID_ROW, GRID_SQR, LEFT, RIGHT,
     CENTER, MIDDLE, TOP, RIGHT, INLINE, OUTLINE, ONLINE)
 
-from map import magazine
-
 # For clarity, most of the MakeABookCover.py example document is setup
 # as a sequential excecution of Python functions. For complex documents
 # this is not the best method. More functions and classes will be used in the
@@ -66,24 +64,24 @@ CH = p(5.5)
 BASELINE = pt(12)
 BASELINE_START = pt(44)
 
-CONTENT_PATH = 'markdown/Firsts.md'      
+CONTENT_PATH = 'Firsts.md'      
 #CONTENT_PATH = 'People-TEST.md'      
-TEMPLATE_PDF = '../../../Design_TYPE-3/Noordzij_Layout-02_rb_TYPE-3.pdf'
+TEMPLATE_PDF = '../../../Design_TYPE-3/Firsts_Layout-01_rb_TYPE-3.pdf'
 EXPORT_PDF = True
 EXPORT_PNG = True
 
-startPage = 20
-endPage = 31
+startPage = 58
+endPage = 73
 
 CC = noColor #color(1, 0, 0)
 
 # Export in folder that does not commit to Git. Force to export PDF.
-EXPORT_PATH_PDF = '_export/%d-%02d-%02d-%02d-P%d-P%d-Type3-GerritNoordzij.pdf'
-EXPORT_PATH_PNG = '_export/P%d-P%d-Type3-GerritNoordzij.png'
+EXPORT_PATH_PDF = '_export/%d-%02d-%02d-%02d-P%d-P%d-Type3-Firsts.pdf'
+EXPORT_PATH_PNG = '_export/P%d-P%d-Type3-Firsts.png'
 
 BOX_NAME = 'Article'
 SHOW_TEMPLATE = True
-SHOW_CONTENT = False
+SHOW_CONTENT = True
 
 titleBold = boldFont = findFont('Upgrade-Bold')
 titleSemibold = findFont('Upgrade-Semibold')

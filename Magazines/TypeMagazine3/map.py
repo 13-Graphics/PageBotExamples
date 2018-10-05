@@ -17,10 +17,17 @@
 from pagebot.elements import Page
 from pagebot.publications.magazine import Magazine
 from pagebot.publications.magazine.parts import *
+from pagebot.toolbox.color import color
+
 from metrics import *
 
+from C_Front import compose_Front
+from A_GNoordzij import compose_Gerrit_Noordzij
+from A_Firsts import compose_Firsts
+from A_People import compose_People
+
 elements =(
-    Front(1),
+    Front(1, name='Front', compose=compose_Front),
     Ad(2),
     Ad(1),
 )
@@ -50,19 +57,19 @@ coverBack = CoverBack(elements=elements)
 elements = [
     coverFront,
     frontOfTheBook,
-    Article(12, name='Gerrit Noordzij', thumbPath='_export/P20-P31-Type3-GerritNoordzij_%d.png'),
-    Article(8, name='Parametric PageBot'),
+    Article(12, name='G Noordzij', compose=compose_Gerrit_Noordzij, thumbPath='_export/P20-P31-Type3-GerritNoordzij_%d.png'),
+    Article(8, name='PageBot'),
     Article(10, name='Variables'),
-    Article(12, name='Historical Futurism'),
-    Article(12, name='Firsts', thumbPath='_export/P58-P73-Type3-Firsts_%d.png'),
-    Article(22, name='People', thumbPath='_export/P74-P95-Type3-PeopleInType_%d.png'),
+    Article(12, name='Hist.Futurism'),
+    Article(12, name='Firsts', compose=compose_Firsts, thumbPath='_export/P58-P73-Type3-Firsts_%d.png'),
+    Article(22, name='People', compose=compose_People, thumbPath='_export/P74-P95-Type3-PeopleInType_%d.png'),
     backOfTheBook,
     coverBack,
 ]
-class TypeMagazine(Magazine):
+class TypeMagazine3(Magazine):
     u"""    
 
-    >>> m = TypeMagazine(w=W, h=H, elements=elements, name='Type Magazine 3')
+    >>> m = TypeMagazine3(w=W, h=H, elements=elements, name='Type Magazine 3')
     >>> m.baselineGrid = BASELINE
     >>> m.baselineGridStart = BASELINE_START
     >>> m.gw = m.gh = GUTTER
@@ -74,7 +81,16 @@ class TypeMagazine(Magazine):
     >>> spreads = m.spreads
     >>> len(spreads)
     52
-    >>> m.exportMap(cols=1, maxSpread=28, showGrid=True, showPadding=True)
+    >>> articleName = 'G Noordzij'
+    >>> articleName = 'People'
+    >>> #m.exportMap(cols=1, maxSpread=28, showGrid=True, showPadding=True)    
+    >>> #doc = m.composePartOfBook(articleName)
+    >>> m.exportPart(articleName)
+
+    >>> articleName = 'Front'
+    >>> #m.exportMap(cols=1, maxSpread=28, showGrid=True, showPadding=True)    
+    >>> #doc = m.composePartOfBook(articleName)
+    >>> m.exportPart(articleName)
     """
 
 if __name__ == '__main__':

@@ -12,16 +12,12 @@
 #     Supporting Flat, xxyxyz.org/flat
 # -----------------------------------------------------------------------------
 #
-#     A_Front.py
+#     A_Gerrit_Noordzij.py
 #
 #     Proof of concept to re-generate the existing InDesign layouts as PDF.
 #
 from pagebot.elements import *
-from pagebot.fonttoolbox.objects.font import findFont
-from pagebot.toolbox.units import inch, em, pt
-from pagebot.toolbox.color import color
-from pagebot.constants import LEFT, RIGHT
-from pagebot.conditions import *
+from pagebot.toolbox.units import inch
 
 from metrics import *
 
@@ -31,27 +27,20 @@ TEMPLATE_PDF = '../../../Design_TYPE-3/Noordzij_Layout-02_rb_TYPE-3.pdf'
 TEMPLATE_PDF = '../Dropbox/Production_TYPE-3/2_Layouts__TYPE-3/People_Layout-01_rb_TYPE-3.pdf'
 TEMPLATE_PDF = '/Users/petr/Dropbox/Production_TYPE-3/2_Layouts__TYPE-3/People_Layout-01_rb_TYPE-3.pdf'
 
-def compose_Front(magazine, part, doc):
-    """This function builds the elements and layout of the People article
+def compose_Gerrit_Noordzij(magazine, part, doc):
+    """This function builds the elements and layout of the Gerrit Noordzij article
     in TypeMagazine3.
     """
-    index = 2
-    for page in part.elements:
-        page = page.copy()
-        page.size = doc.size
-        doc.appendPage(page)
-        if page.isPage:
-            if page.isLeft:
-                page.padding = PADDING_LEFT
-            else:
-                page.padding = PADDING_RIGHT
-
-            if SHOW_TEMPLATE:
+    if SHOW_TEMPLATE:
+        index = 0
+        for page in part.elements:
+            page.size = doc.size
+            doc.appendPage(page)
+            if page.isPage:
                 bgi = newImage(TEMPLATE_PDF, z=-10, parent=page, index=index//2)#, conditions=[Fit()])
                 bgi.size = page.w*2, page.h
                 if page.isRight:
                     bgi.x -= page.w
-
-            index += 1
+                index += 1
 
     #print(part, doc)
