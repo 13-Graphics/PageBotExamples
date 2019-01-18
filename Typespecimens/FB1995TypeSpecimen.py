@@ -25,12 +25,12 @@ from random import choice, shuffle # Used for random selection of sample words
 from pagebot.contexts import getContext # Decide if running in DrawBot or Linux-Flat
 context = getContext()
 
-from pagebot.toolbox.units import inch, pt
+from pagebot.toolbox.units import inch, pt, em
 from pagebot.toolbox.color import color
 
-from pagebot.style import LEFT, RIGHT, CENTER # Import some measure and alignments constants.
+from pagebot.constants import LEFT, RIGHT, CENTER # Import some measure and alignments constants.
 from pagebot.document import Document # Overall container class of any PageBot script
-from pagebot.fonttoolbox.objects.family import getFamily, getFamilies # Access to installed fonts
+from pagebot.fonttoolbox.objects.family import getFamily # Access to installed fonts
 from pagebot.elements import newRect, newTextBox, newImage, newLine # Used elements in this specimen
 from pagebot.toolbox.transformer import path2FontName # Convenient CSS color to PageBot color conversion
 from pagebot.toolbox.hyphenation import wordsByLength # Use English hyphenation dictionary as word selector
@@ -40,7 +40,7 @@ from pagebot.contributions.filibuster.blurb import Blurb
 # Debugging switches
 SHOW_FRAMES = False # True shows page and padding frames.
 SHOW_TEMPLATE = False # True shows the FB Specimen scan at the back of every page to show alignment.
-SHOW_GRID = True # Show page grid and elements backgrounds in opaque colors.
+SHOW_GRID = False # Show page grid and elements backgrounds in opaque colors.
 
 if SHOW_GRID: # Some debugging colors, used when SHOW_GRID is on.
     DEBUG_COLOR0 = (0.7, 0.3, 0.7, 0.2)
@@ -77,23 +77,23 @@ FB_PATH_L = 'images/FB1995TypeSpecimen-Proforma-L.jpg'FB_PATH_R = 'images/FB199
 # Build the specimen pages for the font names that include these patterns.
 FAMILIES = (
     getFamily('Upgrade'),
-    getFamily('Proforma'),
-    getFamily('Bitcount'),
+    #getFamily('Proforma'),
+    #getFamily('Bitcount'),
     #getFamily('Bungee'), 
     #getFamily('Roboto'), 
     #getFamily('AmstelvarAlpha')
 )
-print('Proforma', FAMILIES[1].getStyles().keys())
+#print('Proforma', FAMILIES[1].getStyles().keys())
 
 #labelFamily = getFamily('Roboto')
 labelFamily = getFamily('Upgrade')
 labelFont = labelFamily.findRegularFont() # Ask family to find the most regular font.
 labelItalicFont = labelFamily.findRegularFont(italic=True) # Ask family to find the most regular font.
 
-labelStyle = dict(font=labelFont.path, fontSize=7, rLeading=1, paragraphTopSpacing=4, paragraphBottomSpacing=4)
-fontSetStyle = dict(font=labelItalicFont.path, fontSize=9, xTextAlign=CENTER, rLeading=1.2)
-charSetStyle = dict(font=labelFont.path, fontSize=10, xTextAlign=CENTER, rLeading=1.2)
-descriptionStyle = dict(font=labelFont.path, fontSize=12, xTextAlign=CENTER, rLeading=1.25)
+labelStyle = dict(font=labelFont.path, fontSize=7, leading=em(1), paragraphTopSpacing=4, paragraphBottomSpacing=4)
+fontSetStyle = dict(font=labelItalicFont.path, fontSize=9, xTextAlign=CENTER, leading=em(1.25))
+charSetStyle = dict(font=labelFont.path, fontSize=10, xTextAlign=CENTER, leading=em(1.25))
+descriptionStyle = dict(font=labelFont.path, fontSize=12, xTextAlign=CENTER, leading=em(1.25))
 
 # Sample glyphs set in bottom right frame. Automatic add a spacing between all characters.
 GLYPH_SET = """ABCDEFGHIJKLMNOPQRSTUVWXYZ&$1234567890abcdefghijklmnopqrstuvwxyz.,-‘:;!?\nAÀÁÂÃÄÅĀĂĄǺBCÇĆĈĊČDĎEÈÉÊËĒĔĖĘĚFGĜĞĠĢǦHĤIÌÍÎÏĨĪĬĮİJĴKĶLĹĻĽMNÑŃŅŇOÒÓÔÕÖŌŎŐPQRŔŖŘSŚŜŞŠȘTŢŤȚUÙÚÛÜŨŪŬŮŰŲVWŴẀẂẄXYÝŶŸỲZŹŻŽÆǼÐØǾÞĐĦĿŁŊŒŦΔaàáâãäåāăąǻbcçćĉċčdďeèéêëēĕėęěfgĝğġģǧhĥiìíîïĩīĭįjĵkķlĺļľmnñńņňoòóôõöōŏőpqrŕŗřsśŝşšștţťțuùúûüũūŭůűųvwŵẁẃẅxyýÿŷỳzźżžªºßæǽðøǿþđħıŀłŋœŧƒȷəﬁﬂ0123456789¼½¾₀₁₂₃₄₅₆₇₈₉²³¹⁰⁴⁵⁶⁷⁸⁹_-–—―‒([{‚„)]}!"#%&'*,.//:;?@\¡·¿†‡•…‰′″£¤¥€¦§©®°¶℗℗™◊✓"""
@@ -153,8 +153,7 @@ def getWeightNames(family):
         weightNames += ' ' + weightName
     return weightNames
          
-def buildSpecimenPages(doc, family, pn):
-    page = doc[pn]
+def buildSpecimenPages(page, family):
     page.padding = PADDING
     page.gridX = GRID_X
     pageTitle = family.name
@@ -204,7 +203,7 @@ def buildSpecimenPages(doc, family, pn):
         for font in fonts:
             if font.isItalic():
                 continue
-            sample = context.newString(blurb.getBlurb('article'), style=dict(font=font.path, fontSize=9, rLeading=1.1))
+            sample = context.newString(blurb.getBlurb('article'), style=dict(font=font.path, fontSize=9, leading=em(1.1)))
             h = H/len(family)+L
             newTextBox(sample, parent=page, w=C3, h=h, conditions=(Right2Right(), Float2Top()),
                 fill=DEBUG_COLOR1)
@@ -240,7 +239,7 @@ def buildSpecimenPages(doc, family, pn):
         if random() <= 0.2:
             headline = headline.upper()
         stackLine = context.newString(headline,
-            style=dict(font=choice(context.installedFonts), leading=-0.2,
+            style=dict(font=choice(context.installedFonts()), leading=em(-0.2),
                        paragraphTopSpacing=0, paragraphBottomSpacing=0
             ), w=C3, pixelFit=False)
         _, by, bw, bh = stackLine.bounds()
@@ -249,8 +248,7 @@ def buildSpecimenPages(doc, family, pn):
             break # Filled the page.
         newTextBox(stackLine, parent=page, x=PL, y=y-bh-by-U, w=C3, h=th+2, fill=DEBUG_COLOR1)
         y -= bh + by + U
-    
-    return pn+1
+        page = page.nextc
     
 def makeDocument(families):
     u"""Create the main document in the defined size with a couple of automatic empty pages."""
@@ -260,14 +258,6 @@ def makeDocument(families):
     doc = Document(w=W, h=H, title='Variable Font Sample Page', originTop=False, startPage=0, 
         autoPages=numPages, context=context, gridX=GRID_X, gridY=GRID_Y)
 
-    pn = 1
-    page = doc[pn]
-    page.ch = pt(0) # No vertical grid
-    page.padding = PADDING
-    page.gridX = GRID_X
-    newImage(FB_PATH_L, x=0, y=0, w=W/2, parent=page)
-    newImage(FB_PATH_R, x=W/2, y=0, w=W/2, parent=page)
-    
     # Get default view from the document and set the viewing parameters.
     view = doc.view
     view.padding = inch(0.5) # For showing cropmarks and such, make >=20*MM or INCH.
@@ -280,9 +270,15 @@ def makeDocument(families):
     view.showTextOverflowMarker = False # Don't show marker in case Filibuster blurb is too long.
 
     # Build the pages for all fonts that include one of these patterns.
-    pn += 1
     for family in families:
-        pn = buildSpecimenPages(doc, family, pn)
+        page = doc[1]
+        page.ch = pt(0) # No vertical grid
+        page.padding = PADDING
+        page.gridX = GRID_X
+        newImage(FB_PATH_L, x=0, y=0, w=W/2, parent=page)
+        newImage(FB_PATH_R, x=W/2, y=0, w=W/2, parent=page)
+    
+        buildSpecimenPages(page, family)
 
     doc.solve()
     

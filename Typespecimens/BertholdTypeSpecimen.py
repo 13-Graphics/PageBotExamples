@@ -25,7 +25,7 @@ import os # Import standard libary for accessing the file system.
 from random import choice, shuffle # Used for random selection of sample words
 
 from pagebot.contexts import getContext # Decide if running in DrawBot or Linux-Flat
-from pagebot.constants import CENTER, INLINE # Import some measure and alignments constants.
+from pagebot.constants import * # Import some measure and alignments constants.
 from pagebot.document import Document # Overall container class of any PageBot script
 from pagebot.fonttoolbox.objects.font import findFont # Access to installed fonts
 from pagebot.elements import newRect, newTextBox, newImage # Used elements in this specimen
@@ -43,7 +43,7 @@ SHOW_GRID = True
 SHOW_TEMPLATE = True
 SHOW_FRAMES = True
 
-sampleFont = findFont('Upgrade-Bold')
+sampleFont = findFont('Upgrade-Regular')
  
 blurb = Blurb()
     
@@ -106,12 +106,16 @@ def buildSpecimenPages(doc, family, pn):
     return pn
    
 def makePage1(page, font):
+    # Title as 2-letter abbreviation of the family name, as in Berthold original
     style = dict(font=font, fontSize=pt(24))
     bs = context.newString(font.info.familyName[:2].capitalize(), style=style)
-    newTextBox(bs, parent=page, conditions=[Left2Left(), Top2TopSide()], fill=(1, 0, 0))
+    newTextBox(bs, parent=page, conditions=[Left2Left(), Top2TopSide()], 
+        yAlign=BOTTOM)
 
+    """
     border = dict(stroke=blackColor, strokeWidth=pt(0.5))
-    r = newRect(parent=page, conditions=[Fit()], padding=0, fill=CC)
+    r = newRect(parent=page, conditions=[Fit()], padding=0, fill=CC,
+        yAlign=BOTTOM)
     
     fullName = '%s %s' % (font.info.familyName, font.info.styleName)
     style = dict(font=font, fontSize=pt(24), xTextAlign=CENTER)
@@ -124,7 +128,7 @@ def makePage1(page, font):
     c2 = newRect(parent=r, w=CW, conditions=[Left2Col(2), Float2Top(), Fit2Height()], fill=CC)
     c3 = newRect(parent=r, w=CW, conditions=[Left2Col(3), Float2Top(), Fit2Height()], fill=CC)
     
-    r.solve()
+    """
     
 def makePage2(page, font):
     border = dict(stroke=blackColor, strokeWidth=pt(0.5))
@@ -141,42 +145,33 @@ def makeDocument(font):
 
     # Build 4 pages, two for the original scan, the two for the generated version.
     doc = Document(w=W, h=H, title='Variable Font Sample Page', originTop=False, 
-        autoPages=4, context=context, gridX=GRID_X)
+        context=context, gridX=GRID_X, fontSize=24)
     
     # Get default view from the document and set the viewing parameters.
     view = doc.view
-    view.padding = 0 # For showing cropmarks and such, make > mm(20) or inch(1).
-    view.showPageCropMarks = True # Won't show if there is not padding in the view.
+    view.padding = 40 # For showing cropmarks and such, make > mm(20) or inch(1).
+    view.showCropMarks = True # Won't show if there is not padding in the view.
     view.showFrame = SHOW_FRAMES # No frame in case PAPER_COLOR exists to be shown.
     view.showPadding = SHOW_FRAMES # No frame in case PAPER_COLOR exists to be shown.
     view.showRegistrationMarks = True
-    view.showGrid = SHOW_GRID # Show GRID_X lines
-    view.showPageNameInfo = True # Show file name and date of the document
+    view.showOrigin = True # Show position of xAlign and yAlign
+    view.showBaselines = set([BASE_LINE, BASE_INDEX_LEFT])
+    view.showGrid = DEFAULT_GRID # Show GRID_X lines
+    view.showInfo = True # Show file name and date of the document
     view.showTextOverflowMarker = False # Don't show marker in case Filibuster blurb is too long.
-
-    for pn in range(1, 3):
-        page = doc[pn]
-        newRect(parent=page, fill=PAPER_COLOR, x=0, y=0, w=page.w, h=page.h)
-        page.padding = {True: PADDING_LEFT, False: PADDING_RIGHT}[page.isLeft]        
-        newImage(BERTHOLD_PATH, x=0, y=0, w=W, index=pn, parent=page)
-
-    page = doc[3]
+     
+    page = doc[1]
     # During development, draw the template scan as background
     # Set z-azis != 0, to make floating elements not get stuck at the background
     page.padding = {True: PADDING_LEFT, False: PADDING_RIGHT}[page.isLeft]        
-    if SHOW_TEMPLATE:
-        newImage(BERTHOLD_PATH, x=0, y=0, z=-10, w=W, index=1, parent=page)
+    page.bleed = pt(6)
+    if 0 and SHOW_TEMPLATE:
+        newImage(BERTHOLD_PATH, index=1, parent=page, conditions=[Fit2Sides()])
+    else:
+        newRect(parent=page, fill=PAPER_COLOR, conditions=[Fit2Bleed()])
     makePage1(page, sampleFont)
-
-    page = doc[4]
-    # During development, draw the template scan as background
-    # Set z-azis != 0, to make floating elements not get stuck at the background
-    page.padding = {True: PADDING_LEFT, False: PADDING_RIGHT}[page.isLeft]        
-    if SHOW_TEMPLATE:
-        newImage(BERTHOLD_PATH, x=0, y=0, z=-10, w=W, index=2, parent=page)
-    makePage2(page, sampleFont)
     
-    doc.solve()
+    print(doc.solve())
     
     return doc
 
